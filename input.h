@@ -10,7 +10,7 @@ class Input{
     static int findSquare(Vector2 mousePos);
     static void dragPiece(int piece, Vector2 mousePos);
 
-    static bool isLegal(const Move&);
+    static bool isLegal(const Move&, std::vector<Move>& allMoves);
     static void makeMove(const Move&);
     static void undoMove(const Move&);
 };

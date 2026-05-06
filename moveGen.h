@@ -26,5 +26,6 @@ namespace moveGen{
     void print_board();
     bool isKingCheck(int color);
     std::vector<Move> getAllMoves(int color);
+    std::vector<Move> GET_ALL_MOVES(int color);
 }
 

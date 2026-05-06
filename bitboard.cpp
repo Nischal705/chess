@@ -11,8 +11,8 @@ namespace BitBoard{
        /* if(State::getPiece[sq] != EMPTY){
             removePiece(State::getPiece[sq], sq);
         }*/
-        //if(piece == EMPTY)
-           // return;
+        if(piece == EMPTY)
+           return;
         BITBOARD[piece] |= (1ULL << sq);
         int color = (piece < B_PAWN)? white : black;
         OCCUPIED[color] |= (1ULL << sq);
@@ -21,8 +21,8 @@ namespace BitBoard{
     }
 
     void removePiece(int piece, int sq){
-       // if(piece == EMPTY)
-         //   return;
+       if(piece == EMPTY)
+           return;
         uint64_t mask = ~(1ULL << sq);
         BITBOARD[piece] &= mask;
         int color = (piece < B_PAWN)? white : black;

@@ -40,21 +40,21 @@ void Input::handleInput(){
         
         Move moveTried = {fromSq, toSq, currPiece, State::getPiece[toSq]};
         
-        BitBoard::addPiece(moveTried.piece, fromSq);
-        if(isLegal(moveTried)){
-            Input::makeMove(moveTried); //init for opponent done here
-            
+        BitBoard::addPiece(moveTried.piece, fromSq); //put the piece back on move.from to let makeMove do the whole thing
+        if(isLegal(moveTried, moveGen::allMoves)){
+            Input::makeMove(moveTried); 
+
             
             State::updateStateVariables(moveTried);
             State::updateMaterialCount(moveTried);
 
-            std::cout << "white = " << State::materialCount[white] << " black = " << State::materialCount[black] << std::endl;
-            std:: cout << "eval = " << Eval::getEval() << std::endl;
+            //std::cout << "white = " << State::materialCount[white] << " black = " << State::materialCount[black] << std::endl;
+            
             State::switchTurn();
 
-            std::cout<< std::endl << "this is now " << State::currPlayer->color << "'s turn" << std::endl;
+            //std::cout<< std::endl << "this is now " << State::currPlayer->color << "'s turn" << std::endl;
             //now find the moves for oppononet
-            moveGen::init_allMoves(State::currPlayer->color);
+            //moveGen::init_allMoves(State::currPlayer->color);
             //move completed
             
             
@@ -64,9 +64,10 @@ void Input::handleInput(){
 
                 BitBoard::removePiece(moveTried.piece, moveTried.to);
 
-                if (moveTried.capturedPiece != 12) {
+                if (moveTried.capturedPiece != 12){
                     BitBoard::addPiece(moveTried.capturedPiece, moveTried.to);
-                } else {
+                }
+                else{
                     BitBoard::OCCUPIED[white] &= ~(1ULL << moveTried.to);
                     BitBoard::OCCUPIED[black] &= ~(1ULL << moveTried.to);
                     BitBoard::OCCUPIED[either] &= ~(1ULL << moveTried.to);
@@ -78,7 +79,7 @@ void Input::handleInput(){
         }
         
             
-        std::cout<< "curr player color = " << State::currPlayer->color << std::endl;
+        //std::cout<< "curr player color = " << State::currPlayer->color << std::endl;
         moveGen::print_board();
 
         currPiece = EMPTY;
@@ -105,9 +106,9 @@ void Input::dragPiece(int piece, Vector2 mousePos){
     DrawTexture(pieceTexture, textureX, textureY, WHITE);
 }
 
-bool Input::isLegal(const Move& move){
-    for(int i = 0; i < moveGen::allMoves.size(); i++){
-        if(move == moveGen::allMoves[i]){
+bool Input::isLegal(const Move& move, std::vector<Move>& allMoves){
+    for(int i = 0; i < allMoves.size(); i++){
+        if(move == allMoves[i]){
             int color = move.piece/6;
             /*Input::makeMove(move);
             
