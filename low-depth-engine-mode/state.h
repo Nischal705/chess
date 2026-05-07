@@ -35,4 +35,5 @@ namespace State{
 
     inline int materialCount[2] = {39, 39};
     void updateMaterialCount(const Move& move);
+    void restoreMaterialCount(const Move& move);
 }

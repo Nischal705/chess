@@ -13,6 +13,7 @@ namespace State{
         //update material count
 
     }
+
     
 
     void updateMaterialCount(const Move& move){
@@ -28,6 +29,20 @@ namespace State{
         //for all other captures, capturePiece tells the captured piece
         if(move.capturedPiece != EMPTY){
             materialCount[opp_color] -= value[move.capturedPiece];
+        }
+    }
+    void restoreMaterialCount(const Move& move){
+        int color = move.piece/6;
+        int opp_color = (color == white)? black : white; 
+        if(move.piece == W_PAWN || move.piece == B_PAWN){
+            if(move.capturedPiece == EMPTY && (move.from % 8 != move.to % 8)){
+                materialCount[opp_color]++;
+                return;
+            }
+        }
+        //for all other captures, capturePiece tells the captured piece
+        if(move.capturedPiece != EMPTY){
+            materialCount[opp_color] += value[move.capturedPiece];
         }
     }
 }
