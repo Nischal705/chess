@@ -7,7 +7,7 @@ struct Move{
         int to;
         int piece;
         int capturedPiece;
-
+        bool isEnpassant = false;
         bool operator==(const Move& other) const{
             return (this->from == other.from)&&(this->to == other.to);
         }

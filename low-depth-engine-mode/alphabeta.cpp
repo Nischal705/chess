@@ -11,12 +11,18 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
     if(depth == max_depth){
         return Eval::getEval();
     }
+    //saving the necessary curr state variables locally 
+    Move oppMove = State::oppMove;
+    uint64_t pieceNotMoved = State::pieceNotMoved;
     
     //bool firstMove = true;
 
-    Move bestMove;
+    // Move bestMove;
     //float bestEval = (color == white)? -100 : 100;
     std::vector<Move> possibleMoves = moveGen::GET_ALL_MOVES(color);
+    
+    
+    
 
 
     if(color == white){ //we are iterating through the white move as a response to a black move on upper level 
@@ -26,22 +32,39 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
                         //then we totally abort considering that current upper black move i.e. we break from here and return instead of going deeper
         float maxEval = -inf;
         for(auto& move : possibleMoves){
-            
             Input::makeMove(move);
             State::updateMaterialCount(move);
+            State::oppMove = move;
+            State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
                 float eval = alphaBeta(alpha, beta, depth + 1, !color);
                 maxEval = std::max(eval, maxEval);
                 alpha = std::max(eval, alpha);
                 if(alpha >= beta){
+                    State::oppMove = oppMove;
                     Input::undoMove(move);
                     State::restoreMaterialCount(move);
+                    
+                    State::pieceNotMoved = pieceNotMoved;
                     break;
                 }
                    
             }
+            // else{
+            //     State::oppMove = oppMove;
+            //     // if(specialMove::isEnpassant(move))
+            //     //     std::cout << "white enpassant move rejected" << std::endl;
+                    
+            // // {    std::cout << "rejected moves:" << std::endl;
+            // //     std::cout << "move.piece = " << move.piece << std::endl;
+            // //     std::cout << "move.from = " << move.from << std::endl;
+            // //     std::cout << "move.to = " << move.to << std::endl;
+            // //     std::cout << std::endl; }
+            // }
+            State::oppMove = oppMove;
             Input::undoMove(move);
             State::restoreMaterialCount(move);
+            State::pieceNotMoved = pieceNotMoved;
         }
         return maxEval;
     }
@@ -51,18 +74,34 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
             Input::makeMove(move);
             //State::updateStateVariables(move);
             State::updateMaterialCount(move);
+            State::oppMove = move;
+            State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
                 float eval = alphaBeta(alpha, beta, depth + 1, !color);
                 minEval = std::min(eval, minEval);
                 beta =  std::min(eval, beta);
                 if(alpha >= beta){
+                    State::oppMove = oppMove;
                     Input::undoMove(move);
                     State::restoreMaterialCount(move);
+                    State::pieceNotMoved = pieceNotMoved;
                     break;
                 }
             }
+           
+                
+                    
+                // {std::cout << "rejected moves:" << std::endl;
+                // std::cout << "move.piece = " << move.piece << std::endl;
+                // std::cout << "move.from = " << move.from << std::endl;
+                // std::cout << "move.to = " << move.to << std::endl;
+                // std::cout << std::endl; }
+            State::oppMove = oppMove;
+            // if(specialMove::isEnpassant(move))
+            //         std::cout << "black enpassant move rejected" << std::endl;
             Input::undoMove(move);
             State::restoreMaterialCount(move);
+            State::pieceNotMoved = pieceNotMoved;
         }
     return minEval;
     }
@@ -74,11 +113,15 @@ void AlphaBeta::engineThink(int color){
     float bestEval = (color == white)? -inf : inf;
     float alpha = -inf;
     float beta = +inf;
+    Move oppMove = State::oppMove;
+    uint64_t pieceNotMoved = State::pieceNotMoved;
     std::vector<Move> possibleMoves = moveGen::GET_ALL_MOVES(color);
     if(color == black){
         for(auto& move : possibleMoves){
             Input::makeMove(move);
             State::updateMaterialCount(move);
+            State::oppMove = move; 
+            State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
                 float eval = alphaBeta(alpha, beta, 1, !color);
                 if(eval < bestEval){
@@ -87,14 +130,18 @@ void AlphaBeta::engineThink(int color){
                 }
                 beta = std::min(eval, beta);
             }
+            State::oppMove = oppMove;
             Input::undoMove(move);
             State::restoreMaterialCount(move);
+            State::pieceNotMoved = pieceNotMoved;
         }
     }
     else{
         for(auto& move : possibleMoves){
             Input::makeMove(move);
             State::updateMaterialCount(move);
+            State::oppMove = move; 
+            State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
                 float eval = alphaBeta(alpha, beta, 1, !color);
                 if(eval > bestEval){
@@ -103,10 +150,13 @@ void AlphaBeta::engineThink(int color){
                 }
                 alpha = std::max(eval, alpha);
             }
+            State::oppMove = oppMove;
             Input::undoMove(move);
             State::restoreMaterialCount(move);
+            State::pieceNotMoved = pieceNotMoved;
         }
     }
+    
     trueEval = bestEval;
     finalMove = bestMove;
 }

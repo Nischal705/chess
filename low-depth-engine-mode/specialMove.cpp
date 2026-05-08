@@ -12,12 +12,12 @@ namespace specialMove{
                 if(State::getPiece[oppMove.to + 1] == W_PAWN && oppMove.to + 1 <= 39){
                     int from = oppMove.to + 1;
                     int to = oppMove.to + 8;
-                    specialMoves.push_back({from, to, W_PAWN, B_PAWN});
+                    specialMoves.push_back({from, to, W_PAWN, B_PAWN, true});
                 }
                 if(State::getPiece[oppMove.to - 1] == W_PAWN && oppMove.to - 1 >= 32){
                     int from = oppMove.to - 1;
                     int to = oppMove.to + 8;
-                    specialMoves.push_back({from, to, W_PAWN, B_PAWN});
+                    specialMoves.push_back({from, to, W_PAWN, B_PAWN, true});
                 }
             }
         }
@@ -26,14 +26,25 @@ namespace specialMove{
                 if(State::getPiece[oppMove.to + 1] == B_PAWN && oppMove.to + 1 <= 31){
                     int from = oppMove.to + 1;
                     int to = oppMove.to - 8;
-                    specialMoves.push_back({from, to, B_PAWN, W_PAWN});
+                    specialMoves.push_back({from, to, B_PAWN, W_PAWN, true});
                 }
                 if(State::getPiece[oppMove.to - 1] == B_PAWN && oppMove.to - 1 >= 24){
                     int from = oppMove.to - 1;
                     int to = oppMove.to - 8;
-                    specialMoves.push_back({from, to, B_PAWN, W_PAWN});
+                    specialMoves.push_back({from, to, B_PAWN, W_PAWN, true});
                 }
             }
+        }
+        if(!specialMoves.empty()){
+            std::cout << "start" << std::endl;
+            for(auto& move : specialMoves){
+                std::cout << color << "'s enpassant move detected" << std::endl;
+                // std::cout << "move.piece = " << move.piece << std::endl;
+                // std::cout << "move.from = " << move.from << std::endl;
+                // std::cout << "move.to = " << move.to << std::endl;
+                // std::cout << std::endl;
+            }
+            std::cout << "end" << std::endl << std::endl;
         }
         return specialMoves;
     }
@@ -43,7 +54,7 @@ namespace specialMove{
         int opp_color = (color == white)? black : white; 
         int opp_pawn_sq = (move.piece < 6)? move.to - 8 : move.to + 8;
         int PAWN = (move.piece < 6)? W_PAWN : B_PAWN;
-        int OPP_PAWN = (PAWN == white)? B_PAWN : W_PAWN;
+        int OPP_PAWN = (PAWN == W_PAWN)? B_PAWN : W_PAWN;
         BitBoard::removePiece(move.piece, move.from);
         BitBoard::removePiece(OPP_PAWN, opp_pawn_sq);
         BitBoard::addPiece(move.piece, move.to); 
@@ -61,16 +72,25 @@ namespace specialMove{
         BitBoard::removePiece(move.capturedPiece, opp_pawn_sq);
         BitBoard::addPiece(move.piece, move.from);
         BitBoard::addPiece(move.capturedPiece, opp_pawn_sq);
+        
     }
 
     bool isEnpassant(const Move& move){
-        if(move.piece == W_PAWN && (move.to - move.from == 7 || move.to - move.from == 9))
-            if(State::getPiece[move.to] == EMPTY)
-                return true;
-        if(move.piece == B_PAWN && (move.from - move.to == 7 || move.from - move.to == 9))
-            if(State::getPiece[move.to] == EMPTY)
-                return true;
-        return false;
+        // Move oppMove = State::oppMove;
+        // if(move.piece == W_PAWN && (move.to - move.from == 7 || move.to - move.from == 9)){
+        //     if(oppMove.piece == B_PAWN && (oppMove.from + oppMove.to)/2 == move.to)
+        //         return true;
+        // }
+        // if(move.piece == B_PAWN && (move.from - move.to == 7 || move.from - move.to == 9)){
+        //     if(oppMove.piece == W_PAWN && (oppMove.from + oppMove.to)/2 == move.to)
+        //         return true;
+        // }
+        // return false;
+
+        if(move.isEnpassant)
+            return true;
+        else 
+            return false;
     }
 
     std::vector<Move> getCastles(int color){
@@ -123,9 +143,9 @@ namespace specialMove{
     }
 
     bool isCastle(const Move& move){
-        int can_castle = canCastle(move.piece >= 6);
-        if(can_castle == NO)
-            return false;
+        //int can_castle = canCastle(move.piece/6);
+        //if(can_castle == NO)
+          //  return false;
         //can_castle == true means the castle rights are on so we check if the move played is castle or not
         if(move.piece == W_KING || move.piece == B_KING){
             if(abs(move.from - move.to) == 2)

@@ -22,26 +22,6 @@ namespace moveGen{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         
         for(int sq = 0; sq <= 63; sq++){ //the sq in which piece is standing
             int piece = State::getPiece[sq];
@@ -79,36 +59,7 @@ namespace moveGen{
                 }
             }
 
-            // if(piece == W_PAWN || piece == B_PAWN){ //why am i including this in the loop man
-            //     //move this and the king and the knight out of the loop later
-            //     uint64_t pawn_board = BitBoard::BITBOARD[piece];
-            //     int initial_rank = (color == white)? 1 : 6;
-            //     while(pawn_board){
-            //         int s = __builtin_ctzll(pawn_board);
-            //         int up_s = (color == white)? s+8 : s-8;;
-            //         int up_up_s = (color == white)? s+16 : s-16;
-            //         int r_capture = (color == white)? s+9 : s-7 ;
-            //         int l_capture = (color == white)? s+7 : s-9;
-            //         if(s%8 < 7)
-            //             allAttackedSquares[color] |= (1ULL << r_capture);
-            //         if(s%8 > 0)
-            //             allAttackedSquares[color] |= (1ULL << l_capture);
-            //         if((1ULL << up_s) & ~BitBoard::OCCUPIED[either]){ //single push
-            //             allMoves.push_back({s, up_s, piece, EMPTY});
-            //             if(((1ULL << up_up_s) & ~BitBoard::OCCUPIED[either]) && s/8 == initial_rank) //double push
-            //                 allMoves.push_back({s, up_up_s, piece, EMPTY});
-            //         }
-            //         if(s%8 < 7){
-            //         if((1ULL << r_capture) & BitBoard::OCCUPIED[opp_color])
-            //             allMoves.push_back({s, r_capture, piece, State::getPiece[r_capture]}); //right capture
-            //         }
-            //         if(s%8 > 0){
-            //             if((1ULL << l_capture) & BitBoard::OCCUPIED[opp_color])
-            //             allMoves.push_back({s, l_capture, piece, State::getPiece[l_capture]}); //left capture
-            //         }
-            //         pawn_board &= (pawn_board - 1);
-            //     }
-            // }
+           
 
             if(piece == W_BISHOP || piece == B_BISHOP || piece == W_ROOK || piece == B_ROOK || piece == W_QUEEN || piece == B_QUEEN){
                 static std::vector<std::vector<int>> direction(12);
@@ -247,12 +198,14 @@ namespace moveGen{
         //check for pawn
         int p1 = (color == white)? king_s + 9 : king_s -7; //right side corner
         int p2 = (color == white)? king_s + 7 : king_s - 9; //left side corner
-        if(king_s % 8 < 7)
+        if(king_s % 8 < 7){
             if((State::getPiece[p1] == OPP_PAWN))
                 return true;
-        if(king_s % 8 > 0)
+        }
+        if(king_s % 8 > 0){
             if((State::getPiece[p2] == OPP_PAWN))
                 return true;
+        }
         //now go for the other pieces
         int curr_s, prev_s;
         for(int& dir : h_direction){
@@ -338,10 +291,19 @@ namespace moveGen{
 
     std::vector<Move> GET_ALL_MOVES(int color){
         std::vector<Move>ALL_MOVES = getAllMoves(color);
-        // std::vector<Move> specialMoves = specialMove::getEnpassants(color, State::oppMove);
-        // ALL_MOVES.insert(ALL_MOVES.end(), specialMoves.begin(), specialMoves.end());
-        // std::vector<Move> castleMoves = specialMove::getCastles(color);
-        // ALL_MOVES.insert(ALL_MOVES.end(), castleMoves.begin(), castleMoves.end());
+        std::vector<Move> specialMoves = specialMove::getEnpassants(color, State::oppMove);
+        ALL_MOVES.insert(ALL_MOVES.end(), specialMoves.begin(), specialMoves.end());
+        std::vector<Move> castleMoves = specialMove::getCastles(color);
+        ALL_MOVES.insert(ALL_MOVES.end(), castleMoves.begin(), castleMoves.end());
+        if(!specialMoves.empty()){
+            std::cout << std::endl << "start possible moves" << std::endl;
+            for(auto& move : ALL_MOVES){
+                if(specialMove::isEnpassant(move))
+                    std::cout << "possible moves has " << color << "'s enpassant" << std::endl;
+            }
+            std::cout << "end possible moves" << std::endl << std::endl;
+        }
+
         return ALL_MOVES;   
     }
     void print_board(){

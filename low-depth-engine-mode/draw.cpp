@@ -29,8 +29,8 @@ void Draw::drawPieces(){
         if(sq == State::curr_sq)
             DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, Fade(YELLOW,0.8f));
         //if(moveGen::isKingCheck(State::getPiece[sq] >= 6) && sq == State::KingSq)
-        if(State::isKingCheckBool && sq == State::KingSq)    
-            DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, Fade(RED,0.8f));
+        // if(State::isKingCheckBool && sq == State::KingSq)    
+        //     DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, Fade(RED,0.8f));
         
         // if(BitBoard::OCCUPIED[white] & mask)    
         //          DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, MAGENTA);

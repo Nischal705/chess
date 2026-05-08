@@ -1,5 +1,6 @@
 #pragma once
 #include "moveGen.h"
+#include "specialMove.h"
 
 class AlphaBeta{
     private:
