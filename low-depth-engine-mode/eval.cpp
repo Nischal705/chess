@@ -9,9 +9,9 @@ float Eval::considerMaterial(){
 }
 
 float Eval::considerOccupancy(){
-    float white_control = __builtin_popcount(moveGen::allAttackedSquares[white]);
-    float black_control = __builtin_popcount(moveGen::allAttackedSquares[black]);
-    float diff = (white_control - black_control) * 0.01; //assuming each extra square gives an advantage of 0.2
+    float white_control = __builtin_popcountll(moveGen::allAttackedSquares[white]);
+    float black_control = __builtin_popcountll(moveGen::allAttackedSquares[black]);
+    float diff = (white_control - black_control) * 0.07; //assuming each extra square gives an advantage of 0.2
     return diff;
 }
 
@@ -34,27 +34,27 @@ float Eval::considerKingSafety(){
     uint64_t surrounding_white = moveGen::kingAttacks[white_king_s];
     uint64_t surrounding_black = moveGen::kingAttacks[black_king_s];
     //find intersection with the oppnent's attack and find the  population
-    int danger_white_sq = __builtin_popcount(surrounding_white & moveGen::allAttackedSquares[black]);
-    int danger_black_sq = __builtin_popcount(surrounding_black & moveGen::allAttackedSquares[white]);
-    float diff = (danger_white_sq - danger_black_sq) * 0.01;
+    int danger_white_sq = __builtin_popcountll(surrounding_white & moveGen::allAttackedSquares[black]);
+    int danger_black_sq = __builtin_popcountll(surrounding_black & moveGen::allAttackedSquares[white]);
+    float diff = (danger_white_sq - danger_black_sq) * 0.03;
     return -diff; //if white's king is in more danger than black has advantage
 }   
 
 float Eval::considerDevelopment(){
     //simple implementation: just evaluate based on if the pieces have moved from their home squares or not
-    static uint64_t home_setup_white = 0b1111111111100111ULL;
-    static uint64_t home_setup_black = 0xE9FF000000000000ULL; //not including the queen and king for no reason
-    int n_unmoved_white = __builtin_popcount(home_setup_white & State::pieceNotMoved);
-    int n_unmoved_black = __builtin_popcount(home_setup_black & State::pieceNotMoved);
-    float diff = (n_unmoved_white - n_unmoved_black) * 0.1;
+    static uint64_t home_setup_white = 0b11100111ULL;
+    static uint64_t home_setup_black = 0xE700000000000000ULL; //not including the queen and king for no reason
+    int n_unmoved_white = __builtin_popcountll(home_setup_white & State::pieceNotMoved);
+    int n_unmoved_black = __builtin_popcountll(home_setup_black & State::pieceNotMoved);
+    float diff = (n_unmoved_white - n_unmoved_black) * 0.13;
     return -diff; //if whtie has more unmoved pieces then black has advantage
 }
 
 float Eval::considerCenterControl(){
     static uint64_t center_mask = 0x3838383800000000; // from c3 to f6
-    int n_white_control = __builtin_popcount(center_mask & BitBoard::OCCUPIED[white]);
-    int n_black_control = __builtin_popcount(center_mask & BitBoard::OCCUPIED[black]);
-    float diff = (n_white_control - n_black_control) * 0.01;
+    int n_white_control = __builtin_popcountll(center_mask & BitBoard::OCCUPIED[white]);
+    int n_black_control = __builtin_popcountll(center_mask & BitBoard::OCCUPIED[black]);
+    float diff = (n_white_control - n_black_control) * 0.09;
     return diff;
 }
 

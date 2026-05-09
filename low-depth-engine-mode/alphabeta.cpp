@@ -60,7 +60,7 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
         }
         if(!legalMoveFound){
                 if(moveGen::isKingCheck(color))
-                    return (color == white)? -inf : inf;
+                    return (color == white)? -inf + depth: inf - depth;
                 else    
                     return 0;
             }
@@ -100,7 +100,7 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
 
     if(!legalMoveFound){
                 if(moveGen::isKingCheck(color))
-                    return (color == white)? -inf : inf;
+                    return (color == white)? -inf + depth : inf - depth;
                 else    
                     return 0;
             }
