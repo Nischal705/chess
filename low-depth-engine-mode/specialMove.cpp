@@ -35,17 +35,7 @@ namespace specialMove{
                 }
             }
         }
-        if(!specialMoves.empty()){
-            std::cout << "start" << std::endl;
-            for(auto& move : specialMoves){
-                std::cout << color << "'s enpassant move detected" << std::endl;
-                // std::cout << "move.piece = " << move.piece << std::endl;
-                // std::cout << "move.from = " << move.from << std::endl;
-                // std::cout << "move.to = " << move.to << std::endl;
-                // std::cout << std::endl;
-            }
-            std::cout << "end" << std::endl << std::endl;
-        }
+        
         return specialMoves;
     }
 

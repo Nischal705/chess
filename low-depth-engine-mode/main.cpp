@@ -9,6 +9,8 @@
 #include "input.h"
 #include "moveGen.h"
 #include "alphabeta.h"
+
+
 //g++ main.cpp draw.cpp images.cpp bitboard.cpp input.cpp moveGen.cpp specialMove.cpp player.cpp state.cpp eval.cpp alphabeta.cpp -lraylib -lopengl32 -lgdi32 -lwinmm -o chess.exe
 int main(){
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Chess");
@@ -16,9 +18,11 @@ int main(){
     Images::loadTexture();
     moveGen::init();
     while(!WindowShouldClose()){
-        ClearBackground(BLACK);
+        ClearBackground(GRAY);
         BeginDrawing();
         Draw::drawBoard();
+        Draw::drawSwitch();
+        Draw::handleEvalBarVisibility();
         
         State::currPlayer->playMove();
         

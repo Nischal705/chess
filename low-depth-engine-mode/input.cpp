@@ -148,7 +148,6 @@ bool Input::isLegal(const Move& move, std::vector<Move>& allMoves){
 void Input::makeMove(const Move& move){
     //check for enpassant move
     if(specialMove::isEnpassant(move)){
-        std::cout << "enpassant made" << std::endl;
         specialMove::makeEnpassant(move);
         // moveGen::init_allMoves(move.piece >= 6);
         // moveGen::init_allMoves(move.piece < 6); //pass to opponent i.e. fill allMoves by opponents move
@@ -169,7 +168,6 @@ void Input::makeMove(const Move& move){
 void Input::undoMove(const Move& move){
     if(specialMove::isEnpassant(move)){
     //if(move.piece == W_PAWN && move.to - move.from == 16){  
-        std::cout << "enpassant undo done" << std::endl;  
         specialMove::undoEnpassant(move);
         // moveGen::init_allMoves(move.piece >= 6);
         // moveGen::init_allMoves(move.piece < 6);

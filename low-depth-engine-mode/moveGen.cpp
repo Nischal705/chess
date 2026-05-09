@@ -295,14 +295,6 @@ namespace moveGen{
         ALL_MOVES.insert(ALL_MOVES.end(), specialMoves.begin(), specialMoves.end());
         std::vector<Move> castleMoves = specialMove::getCastles(color);
         ALL_MOVES.insert(ALL_MOVES.end(), castleMoves.begin(), castleMoves.end());
-        if(!specialMoves.empty()){
-            std::cout << std::endl << "start possible moves" << std::endl;
-            for(auto& move : ALL_MOVES){
-                if(specialMove::isEnpassant(move))
-                    std::cout << "possible moves has " << color << "'s enpassant" << std::endl;
-            }
-            std::cout << "end possible moves" << std::endl << std::endl;
-        }
 
         return ALL_MOVES;   
     }

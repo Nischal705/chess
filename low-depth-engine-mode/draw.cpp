@@ -4,6 +4,7 @@
 #include "moveGen.h"
 #include "specialMove.h"
 #include "constants.h"
+#include "raylib.h"
 using namespace BitBoard;
 
 void Draw::drawBoard(){
@@ -29,8 +30,8 @@ void Draw::drawPieces(){
         if(sq == State::curr_sq)
             DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, Fade(YELLOW,0.8f));
         //if(moveGen::isKingCheck(State::getPiece[sq] >= 6) && sq == State::KingSq)
-        // if(State::isKingCheckBool && sq == State::KingSq)    
-        //     DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, Fade(RED,0.8f));
+        if(State::isKingCheckBool && sq == State::KingSq)    
+            DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, Fade(RED,0.8f));
         
         // if(BitBoard::OCCUPIED[white] & mask)    
         //          DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize, cellSize, MAGENTA);
@@ -71,6 +72,25 @@ void Draw::drawPieces(){
 }
 
 void Draw::drawEvalBar(){
-    float eval = Eval::evaluation;
-    
+    static float evalBarX = boardX - evalBarWidth - evalBarPadding;
+    static float evalBarY = boardY; 
+    float evalHeight = Eval::getEvalHeight(); //w.r.t mid-point
+    DrawRectangle(evalBarX, evalBarY, evalBarWidth, boardSize, WHITE);
+    DrawRectangle(evalBarX, evalBarY, evalBarWidth, boardSize/2 - evalHeight, BLACK);
+}
+
+void Draw::handleEvalBarVisibility(){
+    Vector2 mousePos = GetMousePosition();
+    if(CheckCollisionPointRec(mousePos, buttonRectangle)){
+        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            isSwitchOn = !isSwitchOn;
+    }
+    if(isSwitchOn) drawEvalBar();
+}
+
+void Draw::drawSwitch(){
+    if(isSwitchOn) 
+        DrawRectangleRounded(buttonRectangle, 0.5f, 30, GREEN);
+    else    
+        DrawRectangleRounded(buttonRectangle, 0.5f, 30, RED);
 }
