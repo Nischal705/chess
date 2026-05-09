@@ -4,7 +4,7 @@
 
 class AlphaBeta{
     private:
-        inline static int max_depth = 6; //keep it even 
+        inline static int max_depth = 2; //keep it even 
         inline static float inf = 1000;
         inline static Move finalMove;
         inline static int engineColor = 1; //don't keep this here later

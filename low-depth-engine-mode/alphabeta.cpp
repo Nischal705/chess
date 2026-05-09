@@ -11,6 +11,7 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
     if(depth == max_depth){
         return Eval::getEval();
     }
+    bool legalMoveFound = false;
     //saving the necessary curr state variables locally 
     Move oppMove = State::oppMove;
     uint64_t pieceNotMoved = State::pieceNotMoved;
@@ -37,6 +38,7 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
             State::oppMove = move;
             State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
+                legalMoveFound = true;
                 float eval = alphaBeta(alpha, beta, depth + 1, !color);
                 maxEval = std::max(eval, maxEval);
                 alpha = std::max(eval, alpha);
@@ -50,22 +52,18 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
                 }
                    
             }
-            // else{
-            //     State::oppMove = oppMove;
-            //     // if(specialMove::isEnpassant(move))
-            //     //     std::cout << "white enpassant move rejected" << std::endl;
-                    
-            // // {    std::cout << "rejected moves:" << std::endl;
-            // //     std::cout << "move.piece = " << move.piece << std::endl;
-            // //     std::cout << "move.from = " << move.from << std::endl;
-            // //     std::cout << "move.to = " << move.to << std::endl;
-            // //     std::cout << std::endl; }
-            // }
+           
             State::oppMove = oppMove;
             Input::undoMove(move);
             State::restoreMaterialCount(move);
             State::pieceNotMoved = pieceNotMoved;
         }
+        if(!legalMoveFound){
+                if(moveGen::isKingCheck(color))
+                    return (color == white)? -inf : inf;
+                else    
+                    return 0;
+            }
         return maxEval;
     }
     else{
@@ -77,6 +75,7 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
             State::oppMove = move;
             State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
+                legalMoveFound = true;
                 float eval = alphaBeta(alpha, beta, depth + 1, !color);
                 minEval = std::min(eval, minEval);
                 beta =  std::min(eval, beta);
@@ -91,11 +90,6 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
            
                 
                     
-                // {std::cout << "rejected moves:" << std::endl;
-                // std::cout << "move.piece = " << move.piece << std::endl;
-                // std::cout << "move.from = " << move.from << std::endl;
-                // std::cout << "move.to = " << move.to << std::endl;
-                // std::cout << std::endl; }
             State::oppMove = oppMove;
             // if(specialMove::isEnpassant(move))
             //         std::cout << "black enpassant move rejected" << std::endl;
@@ -103,6 +97,13 @@ float AlphaBeta::alphaBeta(float alpha, float beta, int depth, int color){
             State::restoreMaterialCount(move);
             State::pieceNotMoved = pieceNotMoved;
         }
+
+    if(!legalMoveFound){
+                if(moveGen::isKingCheck(color))
+                    return (color == white)? -inf : inf;
+                else    
+                    return 0;
+            }
     return minEval;
     }
 
@@ -113,6 +114,7 @@ void AlphaBeta::engineThink(int color){
     float bestEval = (color == white)? -inf : inf;
     float alpha = -inf;
     float beta = +inf;
+    bool legalMoveFound = false;
     Move oppMove = State::oppMove;
     uint64_t pieceNotMoved = State::pieceNotMoved;
     std::vector<Move> possibleMoves = moveGen::GET_ALL_MOVES(color);
@@ -123,6 +125,7 @@ void AlphaBeta::engineThink(int color){
             State::oppMove = move; 
             State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
+                legalMoveFound = true;
                 float eval = alphaBeta(alpha, beta, 1, !color);
                 if(eval < bestEval){
                     bestMove = move;
@@ -143,6 +146,7 @@ void AlphaBeta::engineThink(int color){
             State::oppMove = move; 
             State::pieceNotMoved &= ~(1ULL << move.from);
             if(!moveGen::isKingCheck(color)){
+                legalMoveFound = true;
                 float eval = alphaBeta(alpha, beta, 1, !color);
                 if(eval > bestEval){
                     bestMove = move;
@@ -156,7 +160,17 @@ void AlphaBeta::engineThink(int color){
             State::pieceNotMoved = pieceNotMoved;
         }
     }
-    
+    if(!legalMoveFound){
+        if(moveGen::isKingCheck(color)){
+            State::isCheckmate = true;
+            trueEval = (color == white)? -inf : inf;
+        }
+        else{    
+            State::isStalemate = true;
+            trueEval = 0;
+        }
+        return;
+    }
     trueEval = bestEval;
     finalMove = bestMove;
 }

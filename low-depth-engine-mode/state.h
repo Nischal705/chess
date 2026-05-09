@@ -22,6 +22,8 @@ namespace State{
     inline uint64_t pieceNotMoved = 0xFFFF00000000FFFF;
     inline bool moveCompleted = false;
     
+    inline bool isCheckmate = false; 
+    inline bool isStalemate = false;
     inline Human human(0);
     inline Engine engine(1);
     inline Player* currPlayer = &human;

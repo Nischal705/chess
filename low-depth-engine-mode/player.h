@@ -18,4 +18,5 @@ class Engine : public Player{
     public:
         Engine(int color){ this->color = color;};
         void playMove() override;
+        void handleGameEnd();
 };

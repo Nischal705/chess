@@ -176,8 +176,8 @@ namespace moveGen{
         //so make changes to isLegalMove() after this
 
         int king_s = __builtin_ctzll(BitBoard::BITBOARD[KING]); //index of our king
-         uint64_t opp_king_s = __builtin_ctzll(BitBoard::BITBOARD[OPP_KING]); //index of opp king
-        int king_mask = (1ULL << king_s);
+        int opp_king_s = __builtin_ctzll(BitBoard::BITBOARD[OPP_KING]); //index of opp king
+        uint64_t king_mask = (1ULL << king_s);
         static std::vector<int> h_direction{8, 1, -8, -1};
         static std::vector<int> d_direction{7, 9, -7, -9};
         
