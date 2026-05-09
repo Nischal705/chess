@@ -38,5 +38,5 @@ void Engine::handleGameEnd(){
     std::string message = (State::isCheckmate)? "You Won" : "It's a Draw";
     std::cout << message << std::endl;
     //std::this_thread::sleep_for(std::chrono::seconds(10));
-    
+
 }

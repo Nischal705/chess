@@ -173,7 +173,7 @@ namespace moveGen{
         //implementation: we first of all remove the piece and place in its to sq
         //without calling init_allMoves 
         //then we call this function
-        //so make changes to isLegalMove() after this
+        //so make changes to isLegalMove() after this //
 
         int king_s = __builtin_ctzll(BitBoard::BITBOARD[KING]); //index of our king
         int opp_king_s = __builtin_ctzll(BitBoard::BITBOARD[OPP_KING]); //index of opp king
@@ -202,6 +202,7 @@ namespace moveGen{
             if((State::getPiece[p1] == OPP_PAWN))
                 return true;
         }
+        //
         if(king_s % 8 > 0){
             if((State::getPiece[p2] == OPP_PAWN))
                 return true;
