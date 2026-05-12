@@ -66,16 +66,6 @@ namespace specialMove{
     }
 
     bool isEnpassant(const Move& move){
-        // Move oppMove = State::oppMove;
-        // if(move.piece == W_PAWN && (move.to - move.from == 7 || move.to - move.from == 9)){
-        //     if(oppMove.piece == B_PAWN && (oppMove.from + oppMove.to)/2 == move.to)
-        //         return true;
-        // }
-        // if(move.piece == B_PAWN && (move.from - move.to == 7 || move.from - move.to == 9)){
-        //     if(oppMove.piece == W_PAWN && (oppMove.from + oppMove.to)/2 == move.to)
-        //         return true;
-        // }
-        // return false;
 
         if(move.isEnpassant)
             return true;
@@ -222,4 +212,63 @@ namespace specialMove{
         //update occupied either
         BitBoard::OCCUPIED[either] = BitBoard::OCCUPIED[0] | BitBoard::OCCUPIED[1];
     }    
+
+    bool isPromotion(const Move& move){ //use it for checking while generating pawn moves
+        if(move.piece == W_PAWN && move.to/8 == 7)
+            return true;
+        if(move.piece == B_PAWN && move.to/8 == 0)
+            return true;
+        return false;
+    }
+    std::vector<Move> getPromotions(const Move& move){
+        //given a pawn move on last rank 
+        //generate all the possible promotion moves
+        int color = move.piece/6;
+        std::vector<Move> promotion_moves;
+        static std::vector<int> promotedPiece;
+        if(color == white)
+            promotedPiece = {W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN};
+        else
+            promotedPiece = {B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN};
+        for(int& piece : promotedPiece)
+            promotion_moves.push_back({move.from, move.to, piece, move.capturedPiece, false, true});
+        return promotion_moves;
+    }
+    //plan: when mouse button released and player's move ready, check if it's a promotion
+    //if yes then draw the options 
+    //get the input 
+    //set move.piece to the new piece, 
+    //make your own makeMove() and undoMove() functions for promotion moves
+
+    //mosue released || promotion stage true
+    //normal moves can be made in the same frame as when mouse is released 
+    //but for promotion moves we need the input first 
+    //when the pawn move is promotion move, set promotionStage = true
+    //draw the options when promotionStage is true
+    //get the input 
+    //after one of the pieces is clicked, set promotionStage = false 
+    //make the move in the same frame
+
+    //we might have to put the drawing part in Input section 
+
+    void makePromotion(const Move& move){//promotion is shown as promoted piece's move
+        int PAWN = (move.piece < 6)? W_PAWN : B_PAWN;  
+        if(move.capturedPiece != EMPTY){
+            BitBoard::removePiece(move.capturedPiece, move.to);
+        }
+        BitBoard::removePiece(PAWN, move.from);
+        BitBoard::addPiece(move.piece, move.to);
+    }
+    
+    void undoPromotion(const Move& move){
+        int PAWN = (move.piece < 6)? W_PAWN : B_PAWN;
+        BitBoard::removePiece(move.piece, move.to);
+        BitBoard::addPiece(PAWN, move.from);  
+        if(move.capturedPiece != EMPTY){
+            BitBoard::addPiece(move.capturedPiece, move.to);
+        }
+    }
+
+    
+
 }

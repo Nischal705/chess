@@ -23,11 +23,18 @@ int main(){
         Draw::drawBoard();
         Draw::drawSwitch();
         Draw::handleEvalBarVisibility();
-        
-        State::currPlayer->playMove();
-        
         Draw::drawPieces();
-        EndDrawing(); 
+        
+
+        if(State::currPlayer->color == State::human.color){
+            State::currPlayer->playMove();
+            if(State::promotionStage) Draw::drawPromotionWindow(State::pendingMove);
+            EndDrawing(); 
+        }
+        else{
+            EndDrawing(); //fully render the frame first, including the human's just made move
+            State::currPlayer->playMove();
+        }
     
     }
 

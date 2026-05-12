@@ -20,5 +20,6 @@ void Images::loadTexture(){
     for(int i = 0; i < 12; i++){
         ImageResize(&pieceImages[i], cellSize - 2*padding, cellSize - 2*padding);
         pieceTextures[i] = LoadTextureFromImage(pieceImages[i]);
+        UnloadImage(pieceImages[i]);
     }
 }

@@ -14,4 +14,8 @@ namespace specialMove{
     void undoCastle(const Move& move);
     void makeEnpassant(const Move& move);
     void undoEnpassant(const Move& move);
+    bool isPromotion(const Move& move);
+    std::vector<Move> getPromotions(const Move& move);
+    void makePromotion(const Move& move);
+    void undoPromotion(const Move& move);
 }

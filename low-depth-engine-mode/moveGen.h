@@ -8,6 +8,7 @@ struct Move{
         int piece;
         int capturedPiece;
         bool isEnpassant = false;
+        bool isPromotion = false;
         bool operator==(const Move& other) const{
             return (this->from == other.from)&&(this->to == other.to);
         }

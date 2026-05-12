@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "constants.h"
 #include "eval.h"
+#include "moveGen.h"
 class Draw{
     private:
         inline static float evalBarWidth = cellSize/3;
@@ -14,4 +15,5 @@ class Draw{
         static void drawEvalBar();
         static void handleEvalBarVisibility();
         static void drawSwitch();
+        static void drawPromotionWindow(const Move& move);
 };

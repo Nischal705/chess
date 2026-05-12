@@ -41,8 +41,8 @@ void Draw::drawPieces(){
 
         if(OCCUPIED[either] & mask){
             // DrawRectangle(boardX + c*cellSize, boardY + r*cellSize, cellSize/2, cellSize/2, BLACK);
-            
-
+            DrawTexture(Images::pieceTextures[State::getPiece[sq]], boardX + c*cellSize + padding, boardY + r*cellSize + padding, WHITE);
+            /*
             if(mask & BITBOARD[W_PAWN])
                 DrawTexture(Images::pieceTextures[W_PAWN], boardX + c*cellSize + padding, boardY + r*cellSize + padding, WHITE);
             else if(mask & BITBOARD[B_PAWN])
@@ -67,6 +67,7 @@ void Draw::drawPieces(){
                 DrawTexture(Images::pieceTextures[W_KING], boardX + c*cellSize + padding, boardY + r*cellSize + padding, WHITE);
             else if(mask & BITBOARD[B_KING])
                 DrawTexture(Images::pieceTextures[B_KING], boardX + c*cellSize + padding, boardY + r*cellSize + padding, WHITE);
+            */
             }
     }
 }
@@ -93,4 +94,27 @@ void Draw::drawSwitch(){
         DrawRectangleRounded(buttonRectangle, 0.5f, 30, GREEN);
     else    
         DrawRectangleRounded(buttonRectangle, 0.5f, 30, RED);
+}
+
+//only draw the promotion square here, write another function to determine the input by checking collision
+void Draw::drawPromotionWindow(const Move& move){
+    //draw peices up to down from the move.to square
+    int color = move.piece/6;
+    int c = move.to%8;
+    float windowX = boardX + c*cellSize;
+    float windowY = (color == white)? boardY : boardY + 4*cellSize;
+    
+    DrawRectangle(windowX, windowY, cellSize, 4*cellSize, PURPLE);
+    if(color == white){
+        DrawTexture(Images::pieceTextures[W_QUEEN], boardX + c*cellSize + padding, boardY + 0*cellSize + padding, WHITE);
+        DrawTexture(Images::pieceTextures[W_ROOK], boardX + c*cellSize + padding, boardY + 1*cellSize + padding, WHITE);
+        DrawTexture(Images::pieceTextures[W_BISHOP], boardX + c*cellSize + padding, boardY + 2*cellSize + padding, WHITE);
+        DrawTexture(Images::pieceTextures[W_KNIGHT], boardX + c*cellSize + padding, boardY + 3*cellSize + padding, WHITE);
+    }
+    else{
+        DrawTexture(Images::pieceTextures[B_QUEEN], boardX + c*cellSize + padding, boardY + 7*cellSize + padding, WHITE);
+        DrawTexture(Images::pieceTextures[B_ROOK], boardX + c*cellSize + padding, boardY + 6*cellSize + padding, WHITE);
+        DrawTexture(Images::pieceTextures[B_BISHOP], boardX + c*cellSize + padding, boardY + 5*cellSize + padding, WHITE);
+        DrawTexture(Images::pieceTextures[B_KNIGHT], boardX + c*cellSize + padding, boardY + 4*cellSize + padding, WHITE);
+    }
 }

@@ -42,6 +42,11 @@ namespace State{
         if(move.capturedPiece != EMPTY){
             materialCount[opp_color] -= value[move.capturedPiece];
         }
+        //for promotions, if a piece is captured it is handled above and the rest is handled here
+        if(move.isPromotion){
+            materialCount[color]--;
+            materialCount[color] += value[move.piece];
+        }
     }
     void restoreMaterialCount(const Move& move){
         int color = move.piece/6;
@@ -55,6 +60,11 @@ namespace State{
         //for all other captures, capturePiece tells the captured piece
         if(move.capturedPiece != EMPTY){
             materialCount[opp_color] += value[move.capturedPiece];
+        }
+        //for promotion 
+        if(move.isPromotion){
+            materialCount[color]++;
+            materialCount[color] -= value[move.piece];
         }
     }
 }

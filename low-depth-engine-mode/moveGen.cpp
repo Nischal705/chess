@@ -134,20 +134,6 @@ namespace moveGen{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         return allMoves;
     }
 
@@ -288,6 +274,16 @@ namespace moveGen{
         allMoves.insert(allMoves.end(), specialMoves.begin(), specialMoves.end());
         std::vector<Move> castleMoves = specialMove::getCastles(color);
         allMoves.insert(allMoves.end(), castleMoves.begin(), castleMoves.end());
+
+        //adding the actual promotion moves 
+        //not removing the corresponding pawn moves to check legality before displaying window
+        for(int i = 0; i < allMoves.size(); i++){
+            if(specialMove::isPromotion(allMoves[i])){
+                std::vector<Move> promotion_moves = specialMove::getPromotions(allMoves[i]);
+                allMoves.insert(allMoves.end(), promotion_moves.begin(), promotion_moves.end());
+                //allMoves.erase(i, 1); 
+            }
+        }
     }
 
     std::vector<Move> GET_ALL_MOVES(int color){
@@ -296,6 +292,15 @@ namespace moveGen{
         ALL_MOVES.insert(ALL_MOVES.end(), specialMoves.begin(), specialMoves.end());
         std::vector<Move> castleMoves = specialMove::getCastles(color);
         ALL_MOVES.insert(ALL_MOVES.end(), castleMoves.begin(), castleMoves.end());
+
+
+        for(int i = 0; i < ALL_MOVES.size(); i++){
+            if(specialMove::isPromotion(ALL_MOVES[i])){
+                std::vector<Move> promotion_moves = specialMove::getPromotions(ALL_MOVES[i]);
+                ALL_MOVES.insert(ALL_MOVES.end(), promotion_moves.begin(), promotion_moves.end());
+                // ALL_MOVES.erase(i, 1); //maybe for engine, we need to keep this
+            }
+        }
 
         return ALL_MOVES;   
     }

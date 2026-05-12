@@ -13,4 +13,5 @@ class Input{
     static bool isLegal(const Move&, std::vector<Move>& allMoves);
     static void makeMove(const Move&);
     static void undoMove(const Move&);
+    static int getChosenPiece(const Move& move);
 };
