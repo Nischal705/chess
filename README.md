@@ -20,7 +20,9 @@ A lightweight, bitboard-based chess engine built with C++ and Raylib.
 ### Build Instructions:
 
 * **Prerequisites:** C++ compiler and raylib
+
+* **Clone** this repository
   
-*  **Compile:** write make in the terminal in the project directory
+*  **Compile** with the command "make" in the terminal in the project directory
   
-* **Run:** write .\chess.exe in the terminal
+* **Run** with the command ".\chess.exe" in the terminal
