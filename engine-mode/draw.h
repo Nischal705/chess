@@ -3,6 +3,7 @@
 #include "constants.h"
 #include "eval.h"
 #include "moveGen.h"
+#include "arrows.h"
 class Draw{
     private:
         inline static float evalBarWidth = cellSize/3;
@@ -16,4 +17,7 @@ class Draw{
         static void handleEvalBarVisibility();
         static void drawSwitch();
         static void drawPromotionWindow(const Move& move);
+        static void drawArrow(Arrow arrow);
+        static void drawAllArrows(Arrow arrow, std::vector<Arrow> arrows);
+        static void DrawArrowHead(Vector2 tip, Vector2 direction, float size);
 };

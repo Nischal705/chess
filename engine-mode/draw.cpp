@@ -5,6 +5,7 @@
 #include "specialMove.h"
 #include "constants.h"
 #include "raylib.h"
+#include <cmath>
 using namespace BitBoard;
 
 void Draw::drawBoard(){
@@ -118,3 +119,49 @@ void Draw::drawPromotionWindow(const Move& move){
         DrawTexture(Images::pieceTextures[B_KNIGHT], boardX + c*cellSize + padding, boardY + 4*cellSize + padding, WHITE);
     }
 }
+
+void Draw::drawAllArrows(Arrow currArrow, std::vector<Arrow> arrows){
+    
+    drawArrow(currArrow);
+
+    if(!arrows.empty()){
+        for(auto arrow : arrows)
+            drawArrow(arrow);
+    }
+}
+
+void Draw::drawArrow( Arrow arrow){
+    if(arrow.to == -1 || arrow.from == -1 || arrow.from == arrow.to)
+        return;
+    static float thickness = 20;
+    float start_x = boardX + arrow.from % 8 * cellSize + cellSize/2;
+    float start_y = boardY + (7 - arrow.from / 8) * cellSize + cellSize/2;
+    float end_x = boardX + arrow.to % 8 * cellSize + cellSize/2;
+    float end_y = boardY + (7 - arrow.to / 8) * cellSize + cellSize/2;
+    Vector2 direction = {end_x - start_x, end_y - start_y};
+    DrawLineEx((Vector2){start_x, start_y}, (Vector2){end_x, end_y}, thickness, GOLD);
+    DrawArrowHead({end_x, end_y}, direction, 45);
+}
+
+void Draw::DrawArrowHead(Vector2 center, Vector2 direction, float size) {
+
+    float angle = atan2f(direction.y, direction.x);
+    float spread = 1.1f;
+    float halfSize = size / 2.0f;
+
+    Vector2 tip = {
+        center.x + halfSize * cosf(angle),
+        center.y + halfSize * sinf(angle)
+    };
+    Vector2 v2 = { 
+        center.x - halfSize * cosf(angle - spread), 
+        center.y - halfSize * sinf(angle - spread) 
+    };
+    Vector2 v3 = { 
+        center.x - halfSize * cosf(angle + spread), 
+        center.y - halfSize * sinf(angle + spread) 
+    };
+
+    
+    DrawTriangle(tip, v3, v2, GOLD); //in counter clockwise 
+}//

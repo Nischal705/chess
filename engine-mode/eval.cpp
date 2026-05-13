@@ -11,7 +11,7 @@ float Eval::considerMaterial(){
 float Eval::considerOccupancy(){
     float white_control = __builtin_popcountll(moveGen::allAttackedSquares[white]);
     float black_control = __builtin_popcountll(moveGen::allAttackedSquares[black]);
-    float diff = (white_control - black_control) * 0.07; //assuming each extra square gives an advantage of 0.2
+    float diff = (white_control - black_control) * 0.03; 
     return diff;
 }
 
@@ -46,7 +46,7 @@ float Eval::considerDevelopment(){
     static uint64_t home_setup_black = 0xE700000000000000ULL; //not including the queen and king for no reason
     int n_unmoved_white = __builtin_popcountll(home_setup_white & State::pieceNotMoved);
     int n_unmoved_black = __builtin_popcountll(home_setup_black & State::pieceNotMoved);
-    float diff = (n_unmoved_white - n_unmoved_black) * 0.13;
+    float diff = (n_unmoved_white - n_unmoved_black) * 0.2;
     return -diff; //if whtie has more unmoved pieces then black has advantage
 }
 
@@ -57,6 +57,7 @@ float Eval::considerCenterControl(){
     float diff = (n_white_control - n_black_control) * 0.09;
     return diff;
 }
+//g++ -g main.cpp draw.cpp images.cpp bitboard.cpp input.cpp moveGen.cpp specialMove.cpp player.cpp state.cpp eval.cpp alphabeta.cpp arrows.cpp -g -w -std=c++17 -lraylib -lopengl32 -lgdi32 -lwinmm -o chess.exe
 
 float Eval::getEval(){
     return considerMaterial() + considerOccupancy() + considerKingSafety()  + considerDevelopment()  + considerCenterControl();

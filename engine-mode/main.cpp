@@ -9,6 +9,7 @@
 #include "input.h"
 #include "moveGen.h"
 #include "alphabeta.h"
+#include "arrows.h"
 
 
 //g++ main.cpp draw.cpp images.cpp bitboard.cpp input.cpp moveGen.cpp specialMove.cpp player.cpp state.cpp eval.cpp alphabeta.cpp -lraylib -lopengl32 -lgdi32 -lwinmm -o chess.exe
@@ -18,13 +19,14 @@ int main(){
     Images::loadTexture();
     moveGen::init();
     while(!WindowShouldClose()){
+        ArrowStorage::handleArrows();
         ClearBackground(GRAY);
         BeginDrawing();
         Draw::drawBoard();
         Draw::drawSwitch();
         Draw::handleEvalBarVisibility();
         Draw::drawPieces();
-        
+        Draw::drawAllArrows(ArrowStorage::currArrow, ArrowStorage::arrows);
 
         if(State::currPlayer->color == State::human.color){
             State::currPlayer->playMove();

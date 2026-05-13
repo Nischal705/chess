@@ -1,8 +1,8 @@
-CXX = g++
-CXXFLAGS = -w -std=c++17
+CXX = g++ 
+CXXFLAGS = -g -w -std=c++17
 LIBS = -lraylib -lopengl32 -lgdi32 -lwinmm
-CPP_FILES = main.cpp draw.cpp images.cpp bitboard.cpp input.cpp moveGen.cpp specialMove.cpp player.cpp state.cpp eval.cpp alphabeta.cpp
-HEADER_FILES = constants.h alphabeta.h bitboard.h draw.h eval.h images.h input.h moveGen.h player.h specialMove.h state.h
+CPP_FILES = main.cpp draw.cpp images.cpp bitboard.cpp input.cpp moveGen.cpp specialMove.cpp player.cpp state.cpp eval.cpp alphabeta.cpp arrows.cpp
+HEADER_FILES = constants.h alphabeta.h bitboard.h draw.h eval.h images.h input.h moveGen.h player.h specialMove.h state.h arrows.h
 TARGET = chess.exe
 
 all: $(TARGET)
